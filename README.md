@@ -73,7 +73,6 @@ for treatment in treatments:
 Tumor_volumes_df=pd.DataFrame(Tumor_volumes)
 Tumor_volumes_df
 
-    # Determine outliers using upper and lower bounds
 quartiles={}
 iqr_values = {}
 outliers = {}
