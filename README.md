@@ -61,3 +61,37 @@ Calculate Correlation and Regression
 1. Calculate the correlation coefficient and linear regression model between mouse weight and average observed tumor volume for the entire Capomulin treatment regimen.
 
 2. Plot the linear regression model on top of the previous scatter plot.
+
+Sources:
+
+The structure of how to use a loop to obtain the IQR and potential outliers was provided by Xpert Learning Assistant:
+
+for treatment in treatments:
+    Tumor_volumes_data = Final_tumor_df.loc[Final_tumor_df["Drug Regimen"] == treatment, ["Tumor Volume (mm3)"]]
+    Tumor_volumes[treatment] = Tumor_volumes_data["Tumor Volume (mm3)"].tolist()
+
+Tumor_volumes_df=pd.DataFrame(Tumor_volumes)
+Tumor_volumes_df
+
+    # Determine outliers using upper and lower bounds
+quartiles={}
+iqr_values = {}
+outliers = {}
+
+for treatment in treatments:
+    quartiles_data=Final_tumor_df.loc[Final_tumor_df["Drug Regimen"] == treatment, ["Tumor Volume (mm3)"]].quantile([.25,.5,.75])
+    q1 = quartiles_data.loc[0.25, "Tumor Volume (mm3)"]
+    q3 = quartiles_data.loc[0.75, "Tumor Volume (mm3)"]
+    iqr = q3 - q1
+    lower_bound = q1 - 1.5 * iqr
+    upper_bound = q3 + 1.5 * iqr
+    potential_outliers = Final_tumor_df.loc[(Final_tumor_df["Drug Regimen"] == treatment) & ((Final_tumor_df["Tumor Volume (mm3)"] < lower_bound) | (Final_tumor_df["Tumor Volume (mm3)"] > upper_bound)), "Tumor Volume (mm3)"]
+    quartiles[treatment] = quartiles_data["Tumor Volume (mm3)"].tolist()
+    iqr_values[treatment] = iqr
+    outliers[treatment] = potential_outliers.tolist()
+
+for treatment in treatments:
+    print(f"Treatment: {treatment}")
+    print(f"Quartiles: {quartiles[treatment]}")
+    print(f"IQR: {iqr_values[treatment]}")
+    print(f"Potential Outliers: {outliers[treatment]}")
